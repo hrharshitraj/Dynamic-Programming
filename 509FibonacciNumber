@@ -1,5 +1,21 @@
 class Solution {
-    public int fib(int N) {
+    public int fib(int n) {
+        // Tabulation, No Recursion used-
+        int[] dp = new int[n+1];    // Same size of dp[] array as it was in Memoization;
+        Arrays.fill(dp,-1);
+
+        if(n==0) return 0;    // If n=0, dp[1] will be Index out of bound, so return here only;
+        // Base cases of Recursion will be stored as we have to go from base case(Bottom) to main answer(Up);
+        dp[0] = 0;
+        dp[1] = 1;
+
+        for(int i=2; i<=n; i++) {    // Recurrence relation will never be executed when n<1(Recursion Base Case);
+            dp[i] = dp[i-1]+dp[i-2];   // Same as Recurrence relation, just store in at dp[n];
+        }
+        return dp[n];  // Return the answer;
+
+        /*
+        // Memoizaion, Recursion used-
         int[] dp = new int[N+1];    // Initialise a dp[] of size n+1 as subproblems would be from 0 to n;
         Arrays.fill(dp,-1);    // At start, store -1 at every index that states a particular subproblem has not been computed yet;
         if(N<=1) return N;    // Base Case;
@@ -9,11 +25,10 @@ class Solution {
             dp[N] = fib(N-1) + fib(N-2);   // If it's computing for the first time, store the value of the subproblem;
             return dp[N];  // Return the value of the subproblem;
         }
+        */
     }
 }
-
 /*
-// Not using DP-
     1.  if(N<=1) return N;
         return fib(N-1) + fib(N-2);
 

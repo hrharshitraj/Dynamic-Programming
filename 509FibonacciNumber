@@ -1,0 +1,34 @@
+class Solution {
+    public int fib(int N) {
+        int[] dp = new int[N+1];    // Initialise a dp[] of size n+1 as subproblems would be from 0 to n;
+        Arrays.fill(dp,-1);    // At start, store -1 at every index that states a particular subproblem has not been computed yet;
+        if(N<=1) return N;    // Base Case;
+
+        if(dp[N]!=-1) return dp[N];    // If dp[n] is computed already, return its value as you don't need to all the way compute and get the value again;
+        else {
+            dp[N] = fib(N-1) + fib(N-2);   // If it's computing for the first time, store the value of the subproblem;
+            return dp[N];  // Return the value of the subproblem;
+        }
+    }
+}
+
+/*
+// Not using DP-
+    1.  if(N<=1) return N;
+        return fib(N-1) + fib(N-2);
+
+    2.  if(N < 2) return N;
+        int prev1 = 1, prev2 = 0;
+        for(int i = 2; i <= N; i++) {
+            int temp = prev1;
+            prev1 += prev2;
+            prev2 = temp;
+        }
+        return prev1;
+*/
+
+Related Topics-
+Math
+Dynamic Programming
+Recursion
+Memoization

@@ -1,0 +1,78 @@
+// Storing all the possible stones frog could jump to from a specific stone in a HashMap where all the stones is being stored as key and from a stone, which stones could the frog jump is being stored as value stored in HashSet;
+class Solution {
+    private boolean frogJump(int[] stones) {
+        int n = stones.length;
+        HashMap<Integer,HashSet<Integer>> map = new HashMap();
+        for(int i=0; i<n; i++) {
+            map.put(stones[i],new HashSet());
+        }
+
+        map.get(stones[0]).add(1);    // It'll add 1 in the hashset stored whose key is stones[0] as from 0 frog can only take a jump of 1;
+        for(int i=0; i<n; i++) {
+            int currStone = stones[i];
+            HashSet<Integer> jumps = map.get(currStone);   // If even 1 stone is there for the frog to go, It means the frog has successfully reached at ith index;
+            // if(jumps.size()==0) return false;   // Even if one stone is skipped by the frog, it doesn't mean it would not be able to cross the river, so don't put this condition;
+            for(int jump : jumps) {    // Iterating all the stones, like from 0 there was only 1 alllowed, hashset contains 1 where key is 0;
+                int pos = currStone + jump;   // currStone+k
+                if(pos==stones[n-1]) return true;  // Frog has crossed the river successfully;
+                if(map.containsKey(pos)) {
+                    if(jump>1) map.get(pos).add(jump-1);
+                    map.get(pos).add(jump);
+                    map.get(pos).add(jump+1);
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean canCross(int[] stones) {
+        if(stones[1]-stones[0]!=1) return false;
+        
+        return frogJump(stones);
+    }
+}
+
+Related Topics-
+Array
+Dynamic Programming
+
+/*
+I tried!
+        int n = stones.length;
+        boolean canFrogJump = false;
+        if(idx==n) {
+            return false;
+        }
+        if(canFrogJump==true) return true;
+
+        int curr = stones[idx];
+        if(k>1 && set.contains(curr+(k-1))) {
+            while(idx<n && stones[idx]!=curr+(k-1)) idx++;
+            if(curr+(k-1)==stones[n-1]) {
+                canFrogJump = true;
+                return true;
+            }
+            frogJump(stones,k-1,idx,set);
+        }
+        if(set.contains(curr+k)) {
+            while(idx<n && stones[idx]!=curr+(k-1)) idx++;
+            if(curr+k==stones[n-1]) {
+                canFrogJump = true;
+                return true;
+            }
+            frogJump(stones,k,idx,set);
+        }
+        if(set.contains(curr+(k+1))) {
+            while(idx<n && stones[idx]!=curr+(k-1)) idx++;
+            if(curr+(k+1)==stones[n-1]) {
+                canFrogJump = true;
+                return true;
+            }
+            frogJump(stones,k+1,idx,set);
+        }
+        // else return false;
+
+        if(canFrogJump==true) return true;
+        else return false;
+        }
+*/        

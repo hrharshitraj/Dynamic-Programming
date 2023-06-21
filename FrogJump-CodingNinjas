@@ -1,0 +1,45 @@
+https://www.codingninjas.com/studio/problems/frog-jump_3621012
+
+import java.util.* ;
+import java.io.*; 
+public class Solution {
+    // Recursion(0 to n-1) to Memoization;
+    private static int minEnergyLost(int[] heights, int n, int idx, int currEnergyLost) {
+        int min = Integer.MAX_VALUE;
+        int left = Integer.MAX_VALUE;
+        int right = Integer.MAX_VALUE;
+        int[] dp = new int[n+1];
+        Arrays.fill(dp,-1);
+        if(idx==n-1) {
+            min = Math.min(min,currEnergyLost);
+            return min;
+        }
+
+        int a = Integer.MAX_VALUE;
+        if(idx<n-1) {
+            if(dp[idx]!=-1) return dp[idx];
+            else {
+                currEnergyLost += Math.abs(heights[idx]-heights[idx+1]);
+                left = minEnergyLost(heights, n, idx+1, currEnergyLost);
+                currEnergyLost -= Math.abs(heights[idx]-heights[idx+1]);
+            }
+            
+        }
+
+        if(idx<n-2) {
+            if(dp[idx]!=-1) right = dp[idx];
+            else {
+                currEnergyLost += Math.abs(heights[idx]-heights[idx+2]);
+                right = minEnergyLost(heights, n, idx+2, currEnergyLost);
+                currEnergyLost -= Math.abs(heights[idx]-heights[idx+2]);
+            }
+        }
+        dp[idx] = Math.min(left,right);
+        return dp[idx];
+    }
+
+    public static int frogJump(int n, int heights[]) {
+        return minEnergyLost(heights,n,0,0);
+    }
+
+}

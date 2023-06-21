@@ -19,7 +19,7 @@ public class Solution {
         if(idx<n-1) {
             if(dp[idx]!=-1) return dp[idx];
             else {
-                currEnergyLost += Math.abs(heights[idx]-heights[idx+1]);
+                currEnergyLost += Math.abs(heights[idx]-heights[idx+1]);  // If you store absolute value, then you need to subtract the value once you come back(Backtrack);
                 left = minEnergyLost(heights, n, idx+1, currEnergyLost);
                 currEnergyLost -= Math.abs(heights[idx]-heights[idx+1]);
             }

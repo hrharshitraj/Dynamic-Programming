@@ -2,8 +2,9 @@ https://www.codingninjas.com/studio/problems/frog-jump_3621012
 
 import java.util.* ;
 import java.io.*; 
+
+// Recursion(0 to n-1) to Memoization;
 public class Solution {
-    // Recursion(0 to n-1) to Memoization;
     private static int minEnergyLost(int[] heights, int n, int idx, int currEnergyLost) {
         int min = Integer.MAX_VALUE;
         int left = Integer.MAX_VALUE;
@@ -41,5 +42,29 @@ public class Solution {
     public static int frogJump(int n, int heights[]) {
         return minEnergyLost(heights,n,0,0);
     }
+}
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Memoization(n-1 to 0);
+public class Solution {
+    private static int minEnergyLost(int[] heights,int idx,int[] dp){
+        int jumpOne = Integer.MAX_VALUE;   // When frog jumps 1 stair;
+        int jumpTwo = Integer.MAX_VALUE;   // When frog jumps 2 stairs;
+
+        if(idx==0) return 0;   // From 0th to 0th, jump doesn't loose any energy;
+
+        if(dp[idx]!=-1) return dp[idx];   // It means dp[idx] is already being computed, and its value is stored in dp[], return it; 
+        jumpOne = minEnergyLost(heights,idx-1,dp) + Math.abs(heights[idx]-heights[idx-1]);   // Absolute difference of idx and idx-1 will give us the energy lost by frog;
+        if(idx>1) jumpTwo = minEnergyLost(heights,idx-2,dp) + Math.abs(heights[idx]-heights[idx-2]);   // Since absolute values of energy lost has not been stored in any variable, we needn't to backtrack once we come back;
+        
+        // Not computed already, find minimum energy lost from a particular jump, store it in dp[idx];
+        return dp[idx] = Math.min(jumpOne, jumpTwo);  // Minimum energy lost at every jump will be considered;
+}
+
+    public static int frogJump(int n, int heights[]) {
+        int dp[]=new int[n];  // It's better if you initialize dp[] here only;
+        Arrays.fill(dp,-1);
+        return minEnergyLost(heights,n-1,dp);
+    }
 }

@@ -45,7 +45,6 @@ public class Solution {
 }
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 // Memoization(n-1 to 0);
 public class Solution {
     private static int minEnergyLost(int[] heights,int idx,int[] dp){
@@ -66,5 +65,56 @@ public class Solution {
         int dp[]=new int[n];  // It's better if you initialize dp[] here only;
         Arrays.fill(dp,-1);
         return minEnergyLost(heights,n-1,dp);
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Tabulation(0 to n-1);
+public class Solution {
+    private static int minEnergyLost(int[] heights, int[] dp) {
+        int n = heights.length;
+        // int firstJump = Integer.MAX_VALUE;  // Your wish where you want to initialize itl
+        int secondJump = Integer.MAX_VALUE;   // You must initialize secondJump here as there's a if condition affecting its work in loop;
+        
+        dp[0] = 0;    // Base case in Memoization;
+        for(int i=1; i<n; i++) {   // Condition when recurrence relation in Memoization could be executed;
+            int firstJump = dp[i-1] + Math.abs(heights[i]-heights[i-1]);   // Recursion call is replaced by storing the value in dp[];
+            if(i>1) secondJump = dp[i-2] + Math.abs(heights[i]-heights[i-2]);
+
+            dp[i] = Math.min(firstJump,secondJump);   // Store the ith minimum jump value in dp[];
+        }
+        return dp[n-1];  // Minimum energy taken by the frog to reach till last stairs is stored at dp[n-1];
+    }
+
+    public static int frogJump(int n, int heights[]) {
+        int dp[]=new int[n+1];  // It's better if you initialize dp[] here only;
+        Arrays.fill(dp,-1);
+        return minEnergyLost(heights,dp);
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Space optimization(O(1);
+// Instead of storing the values at each stair in a dp[], just keep calculating the minimum energy lost at last and second last stair, so that we could calculate energy
+losts when the frog taken a single step jump as well as if he had taken 2 stairs jump, Two variables would do our work, Space is optimised(O(1));
+public class Solution {
+    private static int minEnergyLost(int[] heights, int n) {
+        int firstJump = Integer.MAX_VALUE;  // Your wish where you want to initialize itl
+        int secondJump = Integer.MAX_VALUE;   // You must initialize secondJump here as there's a if condition affecting its work in loop;
+        
+        int minOne = 0;  // To store the minimum energy lost till last stair;
+        int minTwo = 0;  // Two store the minimum energy lost till second last stair;
+        for(int i=1; i<n; i++) {   
+            firstJump = minOne + Math.abs(heights[i]-heights[i-1]);
+            if(i>1) secondJump = minTwo + Math.abs(heights[i]-heights[i-2]);
+
+            minTwo = minOne;   // Store last step energy lost in second last step energy lost as now you get the current stair energy lost;
+            minOne = Math.min(firstJump,secondJump); // Minimum energy lost till current stair;
+        }
+        return minOne;  // Minimum energy taken by the frog to reach till last stairs is stored at dp[n-1];
+    }
+
+    public static int frogJump(int n, int heights[]) {
+        return minEnergyLost(heights,n);
     }
 }

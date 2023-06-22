@@ -1,0 +1,68 @@
+// Frog is allowed to jump any number of stones from 1 to k;
+// Space Optimization is not possible as k might be any number;
+
+public class Main {
+    // Memoization- TC(n*k), SC(n*k)+n;
+    private static int getMin(int[] stones, int n, int k, int[] dp, int idx) {
+        if(idx==0) return 0;   // 0 to 0 costs 0 energy;
+        int miniEnergy = Integer.MAX_VALUE;
+        int a = Integer.MAX_VALUE;
+        
+        for(int i=1; i<=k; i++) {    // Frog can decide to jump any number of stones from 1 to k, check what's best for him;
+            if(dp[idx]!=0) a = dp[idx];   // If already computed energy lost at this stone, no need to again all the way compute and waste time, just return the energy lost;
+            else {   // Else, compute the energy lost;
+                if(idx-i>=0) a = getMin(stones,n,k,dp,idx-i) + Math.abs(stones[idx]-stones[idx-i]);
+            }
+            miniEnergy = Math.min(miniEnergy,a);   // Whatever is the minimum energy loss at every stone jump, keep storing it;
+        }
+        dp[idx] = miniEnergy;    // Once you get the minimum energy lost from a stone, store it it dp[] so that it can be used further;
+        return dp[idx];   // dp[n-1] will be the last idx to return energy lost, it would have total minimum energy lost when frog crosses the river;
+    }
+    
+    public static int minEnergy(int[] stones, int k) {
+        int n = stones.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp,0);
+        return getMin(stones,n,k,dp,n-1);
+    }
+    
+    public static void main(String[] args) {
+        int[] stones = {7,4,4,2,6,6,3,4,7,4,9,2,5,9};
+        int k = 5;
+        int min = minEnergy(stones,k);
+        System.out.println(min);
+    }
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Tabulation- TC(n*k), SC(n);
+public class Main {
+    private static int getMin(int[] stones, int n, int k, int[] dp) {
+        dp[0]=0;   // 0 to 0 costs 0 energy;
+        int miniEnergy = Integer.MAX_VALUE;
+        int a = Integer.MAX_VALUE;
+        
+        for(int idx=1; idx<n; idx++) {    // idx was being executed from 1 to n-1 in Memoization, iterate a loop from the same;
+            for(int i=1; i<=k; i++) {    // For every jump, you find the energy lost and store the minimum one;
+                if(idx-i>=0) a = dp[idx-i] + Math.abs(stones[idx]-stones[idx-i]);
+                miniEnergy = Math.min(miniEnergy,a);
+            }
+            dp[idx] = miniEnergy;   // Store the minimum energy lost at current stone in dp[];
+            miniEnergy = Integer.MAX_VALUE;   // For the next stone, miniEnergy must not carry the same minimum Energy;
+        }
+        return dp[n-1];  // Frog crossed the river by loosing dp[n-1] minimum energy;
+    }
+    
+    public static int minEnergy(int[] stones, int k) {
+        int n = stones.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp,0);
+        return getMin(stones,n,k,dp);
+    }
+    
+    public static void main(String[] args) {
+        int[] stones = {7,4,4,2,6,6,3,4,7,4,9,2,5,9};
+        int k = 5;
+        int min = minEnergy(stones,k);
+        System.out.println(min);
+    }
+}

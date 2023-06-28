@@ -1,0 +1,140 @@
+class Solution {
+    // Space Optimization-
+    // No need of dp[], 3 variables would do our work;
+    private int maxMoney(int[] nums, int idx) {
+        int n = nums.length;
+        int prev = nums[0];
+        int secprev = 0;
+
+        for(int i=1; i<n; i++) {
+            int pick = 0;
+            if(i==1) pick = nums[i];
+            else pick = nums[i] + secprev;
+            int notPick = prev;
+
+            int curr = Math.max(pick,notPick);
+            secprev = prev;
+            prev = curr;
+        }
+
+        return prev;
+    }
+
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if(n<2) return nums[0];
+        return maxMoney(nums,n-1);
+    }
+}
+    /* Tabulation-
+    private int maxMoney(int[] nums, int idx, int[] dp) {
+        int n = nums.length;
+        dp[0] = nums[0];
+        dp[1] = nums[1];
+
+        for(int i=1; i<n; i++) {
+            int pick = 0;
+            if(i==1) pick = nums[i];   // i-2 can't be accessed;
+            else pick = nums[i] + dp[i-2];
+            int notPick = dp[i-1];
+            dp[i] = Math.max(pick,notPick);
+        }
+
+        return dp[idx];
+    }
+
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if(n<2) return nums[0];
+        int[] dp = new int[n];
+        Arrays.fill(dp,-1);
+        return maxMoney(nums,n-1,dp);
+    }
+}
+*/
+
+    /* Memoization-
+    private int maxMoney(int[] nums, int idx, int sum, int[] dp) {
+        if(idx==0) return nums[idx];
+        if(idx<0) return 0;
+
+// You can either pick an element or you don't;
+// If you decide to pick an element, you need to not pick the adjacent one, so go to idx-2;
+// If you decide not to pick the current element, then don't add that current element and go to the adjacent element;
+        if(dp[idx]!=-1) return dp[idx];    // ALready computed and the values is stored it dp[];
+        int pick = nums[idx] + maxMoney(nums,idx-2,sum,dp);    
+        int notPick = 0 + maxMoney(nums,idx-1,sum,dp);
+
+        return dp[idx] = Math.max(pick,notPick);  // Store the value in dp[];
+    }
+    
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if(n<2) return nums[0];
+        int[] dp = new int[n+1];
+        Arrays.fill(dp,-1);
+        return maxMoney(nums,n-1,0,dp);
+    }
+}
+    */
+
+    /* Recursion;
+    private int maxMoneyTwo(int[] nums, int idx, int sum, int[] dp) {
+        int n = nums.length;
+        int tot = 0;
+        if(idx+2>=n) return sum;
+
+        for(int i=idx+2; i<n; i++) {
+            if(dp[i]!=-1) return dp[i];
+            tot = Math.max(tot,maxMoneyTwo(nums,i,sum+nums[i],dp));
+        }
+        return dp[idx]=tot;
+    }
+
+    private int maxMoneyOne(int[] nums, int idx, int sum, int[] dp) {
+        int n = nums.length;
+        int tot = 0;
+
+        if(idx+2>=n) return sum;
+        for(int i=idx+2; i<n; i++) {
+            if(dp[i]!=-1) return dp[i];
+            tot = Math.max(tot,maxMoneyOne(nums,i,sum+nums[i],dp));
+        }
+        return dp[idx]=tot;
+    }
+
+    public int rob(int[] nums) {
+        if(nums.length<2) return nums[0];
+        int sum = 0;
+        int[] dp = new int[nums.length+1];
+        Arrays.fill(dp,-1);
+        int one = maxMoneyOne(nums,0,nums[0],dp);
+        int two = maxMoneyTwo(nums,1,nums[1],dp);
+        return Math.max(one,two);
+    }
+}
+    */
+
+/*
+    public int rob(int[] nums) {
+        If adjacent house were to be robbed;
+        nums = [2,1,1,2] , Actual O/P = 3, Expected O/P = 4
+
+        int n = nums.length;
+        int sum1 = 0;
+        int sum2 = 0;
+
+        for(int i=0; i<n; i=i+2) {
+            sum1 += nums[i];
+        }
+
+        for(int i=1; i<n; i=i+2) {
+            sum2 += nums[i];
+        }
+        return Math.max(sum1,sum2);
+    }  
+*/
+
+Related Topics-
+Array
+Dynamic Programming

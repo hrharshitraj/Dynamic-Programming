@@ -1,0 +1,35 @@
+import java.util.*;
+public class Main {
+    public static int maxPoints(int[] arr, int n, int min, int idx, List<Integer> list){
+        // List<Integer> list = new ArrayList();
+        if(idx<0) {
+            System.out.println(min + " " + list.size() + " " + min*list.size());
+            // if(min==Integer.MAX_VALUE) return Integer.MIN_VALUE;
+            return min*list.size();
+        }
+        
+        int left = Integer.MIN_VALUE;
+        int right = Integer.MIN_VALUE;
+        
+        // System.out.println(Math.min(min,arr[idx]));
+        list.add(arr[idx]);
+        int currLeft = maxPoints(arr,n,Math.min(min,arr[idx]),idx-1,list);
+        left = Math.max(left,currLeft);
+        list.remove(list.size()-1);
+        int currRight = maxPoints(arr,n,min,idx-1,list);
+        right = Math.max(right,currRight);
+        
+        int curr = Math.max(left,right);
+        return curr;
+    }
+    
+    public static void main(String[] args) {
+        int arr[] = {20,4,39,56,30,70};
+        int n = arr.length;
+        List<Integer> list = new ArrayList();
+        int min = Integer.MAX_VALUE;
+        int max = maxPoints(arr,n,min,n-1,list);
+        
+        System.out.println(max);
+        }
+}
